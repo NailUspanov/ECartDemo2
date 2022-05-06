@@ -1,0 +1,50 @@
+﻿@model IEnumerable<ECartDemo2.ViewModel.OrderDetailsModel>
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    function AddToCart(item) {
+        var itemId = $(item).attr("itemid");
+        var formData = new FormData();
+        formData.append("ItemId", itemId);
+        $.ajax({
+            async: true,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: formData,
+            url: '/Shopping/Index',
+            success: function(data) {
+                if (data.Success) {
+                    $("#cartItem").text("Cart(" + data.Counter + ")");
+                }
+            },
+            error: function() {
+                alert("There is some problem.");
+            }
+        });
+    }
+</script>
+<div class="container">
+    <table class="table-condensed" style="width: 100%">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.ItemId
+                </td>
+                <td style="text-align: right">
+                    @item.Quantity.ToString("#,##0")
+                </td>
+                <td style="text-align: right">
+                    @item.UnitPrice.ToString("#,##0.00 RUB")
+                </td>
+                <td style="text-align: right">
+                    @item.Total.ToString("#,##0.00 RUB")
+                </td>
+            </tr>
+        }
+    </table>
+</div>
